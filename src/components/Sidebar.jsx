@@ -1,5 +1,4 @@
-import { motion } from 'framer-motion'
-import { Calendar, BarChart3, Users, Settings, LogOut } from 'lucide-react'
+import { Calendar, BarChart3, Users, LogOut, CalendarRange } from 'lucide-react'
 
 const menuItems = [
   { id: 'dashboard', icon: BarChart3, label: 'Dashboard' },
@@ -9,44 +8,36 @@ const menuItems = [
 
 export default function Sidebar({ active, setActive }) {
   return (
-    <motion.aside 
-      className="w-64 bg-gradient-to-b from-slate-900 to-slate-950 border-r border-white/10 p-6 flex flex-col"
-      initial={{ x: -100 }}
-      animate={{ x: 0 }}
-    >
-      <motion.h1 
-        className="text-2xl font-bold gradient-text mb-12"
-        whileHover={{ scale: 1.05 }}
-      >
-        ✨ EventFlow
-      </motion.h1>
+    <aside className="w-64 bg-slate-900 border-r border-slate-800 p-5 flex flex-col">
+      <div className="flex items-center gap-2.5 px-2 mb-10">
+        <span className="w-8 h-8 rounded-lg bg-indigo-500 flex items-center justify-center">
+          <CalendarRange size={18} className="text-white" />
+        </span>
+        <span className="text-lg font-bold tracking-tight text-white">EventFlow</span>
+      </div>
 
-      <nav className="flex-1 space-y-2">
+      <nav className="flex-1 space-y-1">
         {menuItems.map((item) => (
-          <motion.button
+          <button
             key={item.id}
             onClick={() => setActive(item.id)}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-              active === item.id 
-                ? 'bg-blue-600 text-white' 
-                : 'text-slate-400 hover:text-white hover:bg-white/10'
+            aria-current={active === item.id ? 'page' : undefined}
+            className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+              active === item.id
+                ? 'bg-indigo-500/15 text-indigo-300'
+                : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800'
             }`}
-            whileHover={{ x: 4 }}
-            whileTap={{ scale: 0.95 }}
           >
-            <item.icon size={20} />
+            <item.icon size={18} />
             <span>{item.label}</span>
-          </motion.button>
+          </button>
         ))}
       </nav>
 
-      <motion.button 
-        className="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white w-full rounded-lg hover:bg-white/10 transition-colors"
-        whileHover={{ x: 4 }}
-      >
-        <LogOut size={20} />
-        <span>Logout</span>
-      </motion.button>
-    </motion.aside>
+      <button className="flex items-center gap-3 px-3.5 py-2.5 text-sm font-medium text-slate-400 hover:text-slate-100 w-full rounded-lg hover:bg-slate-800 transition-colors">
+        <LogOut size={18} />
+        <span>Log out</span>
+      </button>
+    </aside>
   )
 }

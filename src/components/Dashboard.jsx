@@ -16,114 +16,87 @@ const events = [
 
 const container = {
   hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
-    },
-  },
+  show: { opacity: 1, transition: { staggerChildren: 0.08 } },
 }
-
 const item = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0 },
+  hidden: { opacity: 0, y: 12 },
+  show: { opacity: 1, y: 0, transition: { ease: [0.2, 0.9, 0.3, 1], duration: 0.4 } },
 }
 
 export default function Dashboard() {
   return (
-    <div className="h-full overflow-auto bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-8">
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-8">
-        <h2 className="text-3xl font-bold mb-2">Welcome back, Alex</h2>
+    <div className="h-full overflow-auto p-8">
+      <div className="mb-8">
+        <h2 className="text-3xl font-bold tracking-tight mb-1">Welcome back, Alex</h2>
         <p className="text-slate-400">Here's what's happening with your events today.</p>
-      </motion.div>
+      </div>
 
-      <motion.div 
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
-        variants={container}
-        initial="hidden"
-        animate="show"
-      >
-        {metrics.map((metric, i) => (
-          <motion.div 
-            key={i}
-            variants={item}
-            className="glass rounded-xl p-6 hover:bg-white/20 transition-all"
-            whileHover={{ y: -4 }}
-          >
-            <div className="flex items-center justify-between mb-4">
-              <metric.icon className="text-blue-400" size={24} />
-              <span className="text-green-400 text-sm">{metric.trend}</span>
+      <motion.div variants={container} initial="hidden" animate="show">
+        <motion.div
+          variants={item}
+          className="panel grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 divide-slate-800 mb-6"
+        >
+          {metrics.map((metric) => (
+            <div key={metric.label} className="p-6">
+              <div className="flex items-center gap-2 text-slate-400 text-sm mb-3">
+                <metric.icon size={16} />
+                {metric.label}
+              </div>
+              <div className="flex items-baseline gap-2.5">
+                <span className="text-2xl font-bold tabular-nums">{metric.value}</span>
+                <span className="text-emerald-400 text-xs font-semibold tabular-nums">{metric.trend}</span>
+              </div>
             </div>
-            <h3 className="text-slate-400 text-sm font-medium mb-1">{metric.label}</h3>
-            <p className="text-2xl font-bold">{metric.value}</p>
-          </motion.div>
-        ))}
-      </motion.div>
+          ))}
+        </motion.div>
 
-      <motion.div
-        variants={container}
-        initial="hidden"
-        animate="show"
-        className="grid grid-cols-1 lg:grid-cols-3 gap-6"
-      >
-        <motion.div variants={item} className="lg:col-span-2 glass rounded-xl p-6">
-          <h3 className="text-xl font-bold mb-6">Upcoming Events</h3>
-          <div className="space-y-4">
-            {events.map((event, i) => (
-              <motion.div
-                key={event.id}
-                className="flex items-center justify-between p-4 bg-white/5 rounded-lg hover:bg-white/10 transition-colors"
-                whileHover={{ x: 4 }}
-              >
-                <div>
-                  <p className="font-semibold">{event.name}</p>
-                  <p className="text-slate-400 text-sm">{event.date}</p>
-                </div>
-                <motion.div 
-                  className="bg-blue-600 px-3 py-1 rounded-full text-sm"
-                  whileHover={{ scale: 1.1 }}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <motion.div variants={item} className="lg:col-span-2 panel p-6">
+            <h3 className="text-lg font-semibold mb-5">Upcoming events</h3>
+            <div className="divide-y divide-slate-800">
+              {events.map((event) => (
+                <div
+                  key={event.id}
+                  className="flex items-center justify-between py-3.5 group cursor-pointer"
                 >
-                  {event.attendees} attendees
-                </motion.div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
+                  <div>
+                    <p className="font-medium group-hover:text-indigo-300 transition-colors">{event.name}</p>
+                    <p className="text-slate-400 text-sm">{event.date}</p>
+                  </div>
+                  <span className="text-sm text-slate-300 tabular-nums">
+                    {event.attendees} <span className="text-slate-500">attendees</span>
+                  </span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
 
-        <motion.div variants={item} className="glass rounded-xl p-6">
-          <h3 className="text-xl font-bold mb-6">Quick Stats</h3>
-          <div className="space-y-6">
-            <div>
-              <div className="flex justify-between mb-2">
-                <span className="text-slate-400">Capacity</span>
-                <span className="font-bold">78%</span>
-              </div>
-              <div className="w-full bg-white/10 rounded-full h-2">
-                <motion.div 
-                  className="bg-gradient-to-r from-blue-400 to-blue-600 h-2 rounded-full"
-                  initial={{ width: 0 }}
-                  animate={{ width: '78%' }}
-                  transition={{ delay: 0.5, duration: 1 }}
-                />
-              </div>
+          <motion.div variants={item} className="panel p-6">
+            <h3 className="text-lg font-semibold mb-5">Quick stats</h3>
+            <div className="space-y-6">
+              {[
+                { label: 'Capacity', pct: 78 },
+                { label: 'Registration', pct: 92 },
+              ].map((stat) => (
+                <div key={stat.label}>
+                  <div className="flex justify-between mb-2 text-sm">
+                    <span className="text-slate-400">{stat.label}</span>
+                    <span className="font-semibold tabular-nums">{stat.pct}%</span>
+                  </div>
+                  <div className="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                    <motion.div
+                      className="bg-indigo-400 h-full rounded-full"
+                      initial={{ scaleX: 0 }}
+                      animate={{ scaleX: 1 }}
+                      style={{ width: `${stat.pct}%`, transformOrigin: 'left' }}
+                      transition={{ delay: 0.4, duration: 0.7, ease: [0.2, 0.9, 0.3, 1] }}
+                    />
+                  </div>
+                </div>
+              ))}
             </div>
-            <div>
-              <div className="flex justify-between mb-2">
-                <span className="text-slate-400">Registration</span>
-                <span className="font-bold">92%</span>
-              </div>
-              <div className="w-full bg-white/10 rounded-full h-2">
-                <motion.div 
-                  className="bg-gradient-to-r from-purple-400 to-purple-600 h-2 rounded-full"
-                  initial={{ width: 0 }}
-                  animate={{ width: '92%' }}
-                  transition={{ delay: 0.6, duration: 1 }}
-                />
-              </div>
-            </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
       </motion.div>
     </div>
   )

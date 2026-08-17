@@ -2,16 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  @apply bg-slate-950 text-slate-50 font-sans;
+:root {
+  --accent: #818cf8;
 }
 
+body {
+  @apply bg-slate-950 text-slate-100 font-sans antialiased;
+}
+
+::selection { background: #818cf8; color: #0f172a; }
+:focus-visible { outline: 2px solid #818cf8; outline-offset: 2px; border-radius: 4px; }
+html { scrollbar-color: #334155 transparent; }
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-thumb { background: #334155; border-radius: 5px; border: 2px solid #020617; }
+::-webkit-scrollbar-track { background: transparent; }
+
 @layer utilities {
-  .glass {
-    @apply bg-white/10 backdrop-blur-md border border-white/20;
-  }
-  
-  .gradient-text {
-    @apply bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent;
+  .panel {
+    @apply bg-slate-900 border border-slate-800 rounded-xl;
   }
 }
